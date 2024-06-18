@@ -123,3 +123,38 @@
 
 
 })(jQuery);
+
+
+$(document).ready(function() {
+    $('.contactform').submit(function(e) {
+        e.preventDefault();
+        
+        // ارسال اطلاعات فرم با استفاده از ایجکس
+        $.ajax({
+            type: 'POST',
+            url: 'php/process-form.php', // آدرس فایل پردازشی فرم
+            data: $(this).serialize(),
+            success: function(response) {
+                // نمایش پیام در مودال
+                $('.output_message').html(response);
+                $('#myModal').modal('show'); // نمایش مودال
+                
+                // بستن خودکار مودال پس از 10 ثانیه
+                setTimeout(function() {
+                    $('#myModal').modal('hide'); // بستن مودال
+                }, 10000); // زمان مورد نظر بر حسب میلی‌ثانیه (اینجا 10000 میلی‌ثانیه = 10 ثانیه)
+            },
+            error: function(xhr, status, error) {
+                // در صورت خطا نیز پیام خطا را نمایش دهید
+                var errorMessage = "خطا در ارسال درخواست: " + xhr.status + " - " + xhr.statusText;
+                $('.output_message').html(errorMessage);
+                $('#myModal').modal('show'); // نمایش مودال
+                // بستن خودکار مودال پس از 10 ثانیه
+                setTimeout(function() {
+                    $('#myModal').modal('hide'); // بستن مودال
+                }, 2000); // زمان مورد نظر بر حسب میلی‌ثانیه (اینجا 10000 میلی‌ثانیه = 10 ثانیه)
+                
+            }
+        });
+    });
+});
